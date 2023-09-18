@@ -1,9 +1,9 @@
 package com.rsbweb.repeaterweb.controller;
 
+import com.rsbweb.repeaterweb.constants.StatusConstants;
 import com.rsbweb.repeaterweb.model.IssueDetails;
 import com.rsbweb.repeaterweb.service.IssueService;
 import com.rsbweb.repeaterweb.service.UserService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class ItemController {
+public class IssueController {
 
     @Autowired
     IssueService issueService;
@@ -30,12 +30,19 @@ public class ItemController {
         return issueService.getIssueDetails(issueId);
     }
 
+    @GetMapping("/api/issues/getIssueBasedOnUser")
+    public  List<IssueDetails>  getIssueBasedOnUser(@RequestHeader("userId")String userId){
+        return issueService.getIssueDetailsByUser(userId);
+    }
+
     @PostMapping("/api/issues/updateIssue")
     public Map<String,Object> updateIssue(@RequestBody IssueDetails issueDetails,@RequestHeader("userId") String userId){
         Map<String,Object> response = new HashMap<>();
         response.put("isSuccess",false);
         if(userService.verifyAdminUser(userId)){
-            response.put("issueDetails",issueService.updateIssueDetails(issueDetails));
+            IssueDetails responseDetails = issueService.updateIssueDetails(issueDetails);
+            response.put("issueDetails", responseDetails);
+            response.put("message",String.format("Issue has been added. ID : %s",responseDetails.issueId));
             response.put("isSuccess",true);
         }else{
             response.put("message","User does not have access to add Issue");
@@ -43,7 +50,7 @@ public class ItemController {
         return response;
     }
 
-    @PutMapping("/api/issues/updateAssignee")
+    @GetMapping("/api/issues/updateAssignee")
     public Map<String,Object> updateAssignee(@RequestHeader("issueId") String issueId,@RequestHeader("userId") String userId){
         Map<String,Object> response = new HashMap<>();
         response.put("isSuccess",false);
@@ -55,11 +62,12 @@ public class ItemController {
         return response;
     }
 
-    @PutMapping("/api/issues/updateStatus")
-    public Map<String,Object> updateStatus(@RequestHeader("issueId") String issueId,@RequestHeader("status") String status){
+    @PostMapping("/api/issues/updateStatus")
+    public Map<String,Object> updateStatus(@RequestHeader("issueId") String issueId,@RequestHeader("status") String status,@RequestBody(required = false) IssueDetails issueDetailsRequest){
         Map<String,Object> response = new HashMap<>();
         response.put("isSuccess",false);
-        IssueDetails issueDetails = issueService.updateStatus(issueId, status);
+        IssueDetails issueDetails = issueService.updateStatus(issueId, status,issueDetailsRequest);
+
         if(issueDetails!=null){
             response.put("isSuccess",true);
             response.put("issueDetails",issueDetails);

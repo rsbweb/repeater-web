@@ -1,9 +1,12 @@
 package com.rsbweb.repeaterweb.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
+import java.util.Map;
+
+import static jakarta.persistence.GenerationType.*;
 
 @Data
 @Entity
@@ -14,7 +17,8 @@ import lombok.*;
 @NoArgsConstructor
 public class IssueDetails {
     @Id
-    public String issueId;
+    @GeneratedValue(strategy = SEQUENCE)
+    public Long issueId;
     public String activityType;
     public String createdTimestamp;
     public String issueReportedTimestamp;
@@ -25,4 +29,8 @@ public class IssueDetails {
     public String customerContactNumber;
     public String status;
     public String assignedUserName;
+    public String remarks1;
+    public String remarks2;
+    public String remarks3;
+
 }
