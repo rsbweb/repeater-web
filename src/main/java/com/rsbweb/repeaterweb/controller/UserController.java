@@ -26,8 +26,18 @@ public class UserController {
     public List<UserDetails> getAllUsers() {
         return userService.getAllUserDetails();
     }
+
+    @GetMapping("/api/users/getAllAdmins")
+    public List<UserDetails> getAllAdmins() {
+        return userService.getAllAdminDetails();
+    }
     @GetMapping("/api/users/getUser")
     public UserDetails getUser(@RequestParam("userName") String userName) {
         return userService.getUserDetails(userName);
+    }
+
+    @GetMapping("/api/users/deleteUser")
+    public void deleteUser(@RequestParam("userName") String userName) {
+        userService.deleteUser(userName);
     }
 }

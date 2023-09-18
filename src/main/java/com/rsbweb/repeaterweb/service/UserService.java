@@ -27,13 +27,32 @@ public class UserService {
     public List<UserDetails> getAllUserDetails(){
         List<UserDetails> response = new ArrayList<>();
         Iterable<UserDetails> userDetails = userRepository.findAll();
-        userDetails.forEach(response::add);
+        userDetails.forEach(u -> {
+            if(u.isAdmin!=null && !u.isAdmin){
+                response.add(u);
+            }
+        });
+        return response;
+    }
+
+    public List<UserDetails> getAllAdminDetails(){
+        List<UserDetails> response = new ArrayList<>();
+        Iterable<UserDetails> userDetails = userRepository.findAll();
+        userDetails.forEach(u -> {
+            if(u.isAdmin!=null && u.isAdmin){
+                response.add(u);
+            }
+        });
         return response;
     }
 
     public UserDetails getUserDetails(String userId){
         Optional<UserDetails> byId = userRepository.findById(userId);
         return byId.orElseGet(UserDetails::new);
+    }
+
+    public void deleteUser(String userId){
+        userRepository.deleteById(userId);
     }
 
     public Boolean verifyAdminUser(String userId){

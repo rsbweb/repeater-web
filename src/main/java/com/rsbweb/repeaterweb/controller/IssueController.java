@@ -19,15 +19,23 @@ public class IssueController {
 
     @Autowired
     UserService userService;
-
     @GetMapping("/api/issues/getAll")
     public List<IssueDetails> getAllIssues(){
         return issueService.getAllIssueDetails();
+    }
+    @GetMapping("/api/issues/getAllCreatedIssues")
+    public List<IssueDetails> getAllCreatedIssues(){
+        return issueService.getAllCreatedIssues();
     }
 
     @GetMapping("/api/issues/getIssue")
     public IssueDetails getSpecificIssueById(@RequestParam("issueId")String issueId){
         return issueService.getIssueDetails(issueId);
+    }
+
+    @GetMapping("/api/issues/deleteIssue")
+    public void deleteIssueById(@RequestParam("issueId")String issueId){
+        issueService.deleteIssueById(issueId);
     }
 
     @GetMapping("/api/issues/getIssueBasedOnUser")

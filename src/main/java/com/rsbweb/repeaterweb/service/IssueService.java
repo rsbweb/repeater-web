@@ -22,8 +22,15 @@ public class IssueService {
     @Autowired
     CommonUtils commonUtils;
 
-    public List<IssueDetails> getAllIssueDetails(){
+    public List<IssueDetails> getAllCreatedIssues(){
         return issueRepository.getCreatedIssues();
+    }
+
+    public List<IssueDetails> getAllIssueDetails(){
+        List<IssueDetails> response = new ArrayList<>();
+        Iterable<IssueDetails> issueDetails = issueRepository.findAll();
+        issueDetails.forEach(response::add);
+        return response;
     }
 
     public List<IssueDetails> updateBulkIssueDetails(List<IssueDetails> issueDetailsList){
@@ -41,6 +48,10 @@ public class IssueService {
     public IssueDetails getIssueDetails(String issueId){
         Optional<IssueDetails> byId = issueRepository.findById(issueId);
         return byId.orElseGet(IssueDetails::new);
+    }
+
+    public void deleteIssueById(String issueId){
+        issueRepository.deleteById(issueId);
     }
 
     public  List<IssueDetails> getIssueDetailsByUser(String userId){
